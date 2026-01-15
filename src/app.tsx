@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { DirectoryInput } from "./components/directory-input.tsx";
 import { ErrorView } from "./components/error-view.tsx";
+import { FilePreview } from "./components/file-preview.tsx";
 import { ProgressView } from "./components/progress-view.tsx";
 import { RepoList } from "./components/repo-list.tsx";
 import { SuccessView } from "./components/success-view.tsx";
@@ -27,6 +28,7 @@ export function App() {
           onOutputPathChange={actions.setOutputPath}
           onDaysChange={actions.setDaysToInclude}
           onSubmit={actions.startScan}
+          onExit={actions.exit}
         />
       );
 
@@ -50,7 +52,19 @@ export function App() {
 
     case "complete":
       return (
-        <SuccessView outputFile={state.outputFile} onExit={actions.exit} />
+        <SuccessView
+          outputFile={state.outputFile}
+          onPreview={actions.showFilePreview}
+          onExit={actions.exit}
+        />
+      );
+
+    case "file-preview":
+      return (
+        <FilePreview
+          filePath={state.outputFile}
+          onBack={actions.goBack}
+        />
       );
 
     case "error":

@@ -10,6 +10,7 @@ import {
   getDefaultOutputPath,
 } from "../utils/config.ts";
 import { writeDevDiary } from "../utils/markdown.ts";
+import { savePersistedConfig } from "../utils/persistence.ts";
 
 interface UseAppStateReturn {
   state: AppState;
@@ -40,6 +41,13 @@ export function useAppState(): UseAppStateReturn {
   }, []);
 
   const startScan = useCallback(async () => {
+    // Save user selections for next time
+    await savePersistedConfig({
+      directory: state.directory,
+      outputPath: state.outputPath,
+      daysToInclude: state.daysToInclude,
+    });
+
     setState((prev) => ({ ...prev, phase: "scanning" }));
 
     try {
@@ -68,7 +76,7 @@ export function useAppState(): UseAppStateReturn {
           error instanceof Error ? error.message : "Failed to scan directory",
       }));
     }
-  }, [state.directory]);
+  }, [state.directory, state.outputPath, state.daysToInclude]);
 
   const confirmPreview = useCallback(async () => {
     setState((prev) => ({
@@ -122,11 +130,17 @@ export function useAppState(): UseAppStateReturn {
     }
   }, [state.repos, state.outputPath, state.daysToInclude]);
 
+  const showFilePreview = useCallback(() => {
+    setState((prev) => ({ ...prev, phase: "file-preview" }));
+  }, []);
+
   const goBack = useCallback(() => {
     setState((prev) => {
       switch (prev.phase) {
         case "preview":
           return { ...prev, phase: "input", repos: [] };
+        case "file-preview":
+          return { ...prev, phase: "complete" };
         case "error":
           return { ...prev, phase: "input", error: undefined };
         default:
@@ -147,6 +161,7 @@ export function useAppState(): UseAppStateReturn {
       setDaysToInclude,
       startScan,
       confirmPreview,
+      showFilePreview,
       goBack,
       exit,
     },

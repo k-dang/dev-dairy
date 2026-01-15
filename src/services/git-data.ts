@@ -1,4 +1,4 @@
-import type { GitRepo, CommitInfo, RepoData } from "../types/index.ts";
+import type { CommitInfo, GitRepo, RepoData } from "../types/index.ts";
 
 async function runGitCommand(
   repoPath: string,

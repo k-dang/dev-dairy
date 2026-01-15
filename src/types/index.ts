@@ -5,6 +5,7 @@ export type AppPhase =
   | "fetching"
   | "summarizing"
   | "complete"
+  | "file-preview"
   | "error";
 
 export interface GitRepo {
@@ -47,6 +48,7 @@ export interface AppActions {
   setDaysToInclude: (days: number) => void;
   startScan: () => Promise<void>;
   confirmPreview: () => Promise<void>;
+  showFilePreview: () => void;
   goBack: () => void;
   exit: () => void;
 }
