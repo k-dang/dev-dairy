@@ -16,14 +16,46 @@ async function runGitCommand(
   return output.trim();
 }
 
+async function getUserEmail(repoPath: string): Promise<string | null> {
+  const localEmail = await runGitCommand(repoPath, [
+    "config",
+    "--local",
+    "user.email",
+  ]);
+  if (localEmail) {
+    return localEmail;
+  }
+
+  const globalEmail = await runGitCommand(repoPath, [
+    "config",
+    "--global",
+    "user.email",
+  ]);
+  if (globalEmail) {
+    return globalEmail;
+  }
+
+  return null;
+}
+
 export async function getCommitsFromLastDays(
   repoPath: string,
   days: number = 1,
 ): Promise<Omit<CommitInfo, "diff">[]> {
+  // Get user email for filtering
+  const userEmail = await getUserEmail(repoPath);
+
+  if (!userEmail) {
+    // No user email configured - return empty array
+    // This ensures only the current user's commits are included
+    return [];
+  }
+
   const format = "%H|%s|%an|%ai";
   const output = await runGitCommand(repoPath, [
     "log",
     `--since=${days} days ago`,
+    `--author=${userEmail}`,
     `--format=${format}`,
   ]);
 
@@ -31,31 +63,20 @@ export async function getCommitsFromLastDays(
     return [];
   }
 
-  const commits: Omit<CommitInfo, "diff">[] = [];
-
-  for (const line of output.split("\n")) {
-    if (!line.trim()) continue;
-
-    const parts = line.split("|");
-    if (parts.length >= 4) {
-      commits.push({
-        hash: parts[0] ?? "",
-        message: parts[1] ?? "",
-        author: parts[2] ?? "",
-        date: parts[3] ?? "",
-      });
-    }
-  }
-
-  return commits;
+  return output
+    .split("\n")
+    .filter((line) => line.trim())
+    .map((line) => {
+      const [hash = "", message = "", author = "", date = ""] = line.split("|");
+      return { hash, message, author, date };
+    });
 }
 
 export async function getCommitDiff(
   repoPath: string,
   hash: string,
 ): Promise<string> {
-  const output = await runGitCommand(repoPath, ["show", "--format=", hash]);
-  return output;
+  return runGitCommand(repoPath, ["show", "--format=", hash]);
 }
 
 export async function getRepoData(
@@ -64,20 +85,14 @@ export async function getRepoData(
 ): Promise<RepoData> {
   const commitsWithoutDiff = await getCommitsFromLastDays(repo.path, days);
 
-  const commits: CommitInfo[] = await Promise.all(
-    commitsWithoutDiff.map(async (commit) => {
-      const diff = await getCommitDiff(repo.path, commit.hash);
-      return {
-        ...commit,
-        diff,
-      };
-    }),
+  const commits = await Promise.all(
+    commitsWithoutDiff.map(async (commit) => ({
+      ...commit,
+      diff: await getCommitDiff(repo.path, commit.hash),
+    })),
   );
 
-  return {
-    repo,
-    commits,
-  };
+  return { repo, commits };
 }
 
 export async function getAllRepoData(
@@ -87,14 +102,10 @@ export async function getAllRepoData(
 ): Promise<RepoData[]> {
   const results: RepoData[] = [];
 
-  for (let i = 0; i < repos.length; i++) {
-    const repo = repos[i];
-    if (!repo) continue;
-
-    onProgress?.(i + 1, repos.length, repo.name);
+  for (const [index, repo] of repos.entries()) {
+    onProgress?.(index + 1, repos.length, repo.name);
     const data = await getRepoData(repo, days);
 
-    // Only include repos with commits
     if (data.commits.length > 0) {
       results.push(data);
     }
