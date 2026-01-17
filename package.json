@@ -40,6 +40,7 @@
     "build": "bun run scripts/build.ts",
     "build:exe": "bun run scripts/build-exe.ts",
     "prepublishOnly": "bun run build",
+    "postinstall": "bun run scripts/postinstall.ts",
     "format": "bunx biome format --write",
     "lint": "bunx biome lint",
     "lint:fix": "bunx biome lint --write",
