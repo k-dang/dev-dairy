@@ -54,6 +54,7 @@ export function App() {
         <SuccessView
           outputFile={state.outputFile}
           onPreview={actions.showFilePreview}
+          onBack={actions.goBack}
         />
       );
 

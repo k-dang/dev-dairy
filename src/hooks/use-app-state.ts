@@ -184,6 +184,8 @@ export function useAppState(): UseAppStateReturn {
           return { ...prev, phase: "input", repos: [] };
         case "file-preview":
           return { ...prev, phase: "complete" };
+        case "complete":
+          return { ...prev, phase: "input" };
         case "error":
           return { ...prev, phase: "input", error: undefined };
         default:
