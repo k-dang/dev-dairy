@@ -28,6 +28,7 @@
   "module": "./dist/index.js",
   "files": [
     "dist",
+    "scripts/postinstall.ts",
     "README.md"
   ],
   "engines": {
