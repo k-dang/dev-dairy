@@ -1,0 +1,66 @@
+name: Publish to npm
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.2'
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type check
+        run: bun run check
+
+      - name: Lint code
+        run: bun run lint
+
+      - name: Configure npm
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+      - name: Check version
+        id: version-check
+        run: |
+          PUBLISHED_VERSION=$(npm view @k-dang/dev-diary version 2>/dev/null || echo "0.0.0")
+          LOCAL_VERSION=$(node -p "require('./package.json').version")
+
+          echo "Published version: $PUBLISHED_VERSION"
+          echo "Local version: $LOCAL_VERSION"
+
+          if [ "$PUBLISHED_VERSION" = "$LOCAL_VERSION" ]; then
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+            echo "Version $LOCAL_VERSION already published"
+          else
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "Will publish version $LOCAL_VERSION"
+          fi
+
+      - name: Publish package
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: bun publish -p --access
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.version-check.outputs.should-publish }}" = "true" ]; then
+            echo "✅ Published @k-dang/dev-diary@$(node -p "require('./package.json').version") to npm" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⏭️ Skipped publishing - version already exists on npm" >> $GITHUB_STEP_SUMMARY
+          fi

@@ -1,5 +1,7 @@
 # dev-diary
 
+[![npm version](https://badge.fury.io/js/%40k-dang%2Fdev-diary.svg)](https://www.npmjs.com/package/@k-dang/dev-diary)
+
 > AI-powered dev diary generator that scans your git repositories and creates a narrative summary of your work
 
 A terminal UI application that scans your local git repositories, collects recent commits, and generates an AI-powered "dev diary" summarizing your work.
@@ -106,3 +108,21 @@ Today's work focused on...
 - **Language**: TypeScript with strict mode
 - **TUI**: @opentui/react (React-based terminal UI)
 - **AI**: Vercel AI SDK with Google Gemini
+
+## Development
+
+### Publishing
+
+This package is automatically published to npm via GitHub Actions when changes are pushed to the `main` branch. The workflow:
+
+1. Runs TypeScript type checking (`bun run check`)
+2. Runs code linting (`bun run lint`)
+3. Checks if the version in `package.json` has changed
+4. Publishes to npm if the version is new
+
+**To publish a new version:**
+1. Update the version in `package.json`
+2. Commit and push to main
+3. GitHub Actions will automatically publish to npm
+
+**Required Secret:** `NPM_TOKEN` must be configured in repository secrets for automated publishing.
