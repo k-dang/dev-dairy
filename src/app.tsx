@@ -59,10 +59,7 @@ export function App() {
 
     case "file-preview":
       return (
-        <FilePreview
-          filePath={state.outputFile}
-          onBack={actions.goBack}
-        />
+        <FilePreview filePath={state.outputFile} onBack={actions.goBack} />
       );
 
     case "error":

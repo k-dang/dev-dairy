@@ -24,13 +24,25 @@ export function FilePreview({ filePath, onBack }: FilePreviewProps) {
 
   return (
     <box flexDirection="column" padding={1}>
-      <box border title="File Preview" padding={1} flexDirection="column" gap={1}>
+      <box
+        border
+        title="File Preview"
+        padding={1}
+        flexDirection="column"
+        gap={1}
+      >
         <text>
           <span fg="gray">File: </span>
           <span fg="cyan">{filePath}</span>
         </text>
 
-        <box border borderStyle="single" padding={1} flexDirection="column" marginTop={1}>
+        <box
+          border
+          borderStyle="single"
+          padding={1}
+          flexDirection="column"
+          marginTop={1}
+        >
           <text>{content}</text>
         </box>
 
