@@ -17,20 +17,40 @@ A terminal UI application that scans your local git repositories, collects recen
 
 ## Prerequisites
 
-This project requires the following:
+- Vercel AI Gateway API key (required for AI summarization)
+- [Bun](https://bun.sh) v1.3.2 or higher (only for npm installation or development)
 
-- [Bun](https://bun.sh) v1.3.2 or higher
-- Vercel AI Gateway API key
+**Note**: Standalone binaries include the Bun runtime, so you don't need to install Bun separately.
 
 ## Installation
 
-### Using npx (No Installation Required - Recommended)
+### Standalone Binary (No npm/Bun Required - Recommended)
+
+Install with a single command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/k-dang/dev-diary/main/install.sh | sh
+```
+
+Or manually download the latest binary for your platform from [GitHub Releases](https://github.com/k-dang/dev-diary/releases):
+- **Windows**: `dev-diary-windows-x64.exe`
+- **macOS (Apple Silicon)**: `dev-diary-darwin-arm64`
+- **macOS (Intel)**: `dev-diary-darwin-x64`
+- **Linux**: `dev-diary-linux-x64`
+
+Make it executable and run:
+```bash
+chmod +x dev-diary-*
+./dev-diary-*
+```
+
+### Using npx (No Installation Required)
 
 ```bash
 npx @k-dang/dev-diary
 ```
 
-### Global Installation
+### Global Installation via npm
 
 ```bash
 npm install -g @k-dang/dev-diary
@@ -111,7 +131,7 @@ Today's work focused on...
 
 ## Development
 
-### Publishing
+### Publishing to npm
 
 This package is automatically published to npm via GitHub Actions when changes are pushed to the `main` branch. The workflow:
 
@@ -126,3 +146,20 @@ This package is automatically published to npm via GitHub Actions when changes a
 3. GitHub Actions will automatically publish to npm
 
 **Required Secret:** `NPM_TOKEN` must be configured in repository secrets for automated publishing.
+
+### Creating Releases
+
+Standalone binaries are automatically built for all platforms when you push a version tag:
+
+```bash
+# Update version in package.json, then:
+git tag v0.2.1
+git push origin v0.2.1
+```
+
+GitHub Actions will:
+1. Build executables for Windows, macOS (ARM64 + x64), and Linux
+2. Create a GitHub Release with auto-generated release notes
+3. Attach all binaries to the release
+
+Binaries are built on native runners to ensure compatibility.

@@ -1,0 +1,75 @@
+name: Release Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+          - { os: windows-latest, name: windows-x64, ext: .exe }
+          - { os: ubuntu-latest, name: linux-x64, ext: '' }
+          - { os: macos-latest, name: darwin-arm64, ext: '' }
+          - { os: macos-13, name: darwin-x64, ext: '' }
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build executable
+        run: bun run build:exe ${{ matrix.config.name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-diary-${{ matrix.config.name }}
+          path: dist/dev-diary-${{ matrix.config.name }}${{ matrix.config.ext }}
+          if-no-files-found: error
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure
+        run: ls -R artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            artifacts/dev-diary-windows-x64/dev-diary-windows-x64.exe
+            artifacts/dev-diary-linux-x64/dev-diary-linux-x64
+            artifacts/dev-diary-darwin-arm64/dev-diary-darwin-arm64
+            artifacts/dev-diary-darwin-x64/dev-diary-darwin-x64
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
