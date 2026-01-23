@@ -88,3 +88,12 @@ case ":$PATH:" in
     echo "Or run directly: $INSTALL_DIR/dev-diary"
     ;;
 esac
+
+echo ""
+echo "IMPORTANT: Set up your Vercel AI Gateway API key before running dev-diary:"
+echo "  export AI_GATEWAY_API_KEY=<your-vercel-ai-gateway-key>"
+echo ""
+echo "To make this permanent, add the export to your shell profile:"
+echo "  ~/.bashrc, ~/.zshrc, or ~/.profile"
+echo ""
+echo "Get your API key from: https://vercel.com/docs/ai-gateway"
