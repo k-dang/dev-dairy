@@ -4,13 +4,10 @@ interface ErrorViewProps {
 
 export function ErrorView({ error }: ErrorViewProps) {
   return (
-    <box flexDirection="column" padding={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
       <box
-        border
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
         title="Dev Diary Error"
-        padding={1}
-        flexDirection="column"
-        gap={1}
       >
         <text>
           <span fg="red">✗</span>

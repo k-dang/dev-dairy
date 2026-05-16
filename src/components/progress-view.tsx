@@ -41,8 +41,11 @@ export function ProgressView({ phase, progress }: ProgressViewProps) {
   };
 
   return (
-    <box flexDirection="column" padding={1}>
-      <box border title="Dev Diary" padding={1} flexDirection="column" gap={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
+      <box
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
+        title="Dev Diary"
+      >
         <text>
           <span fg="cyan">{spinner}</span>
           <span> {getMessage()}</span>

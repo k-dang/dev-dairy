@@ -60,15 +60,12 @@ export function FilePreview({ filePath }: FilePreviewProps) {
   }, [filePath]);
 
   return (
-    <box flexDirection="column" padding={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
       <box
-        border
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
         title="Dev Diary Preview"
-        padding={1}
-        flexDirection="column"
-        gap={1}
       >
-        <box flexDirection="row" justifyContent="space-between">
+        <box style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <text>
             <span fg="gray">File: </span>
             <span fg="cyan">{filePath}</span>
@@ -81,13 +78,15 @@ export function FilePreview({ filePath }: FilePreviewProps) {
         </box>
 
         <box
-          border
-          borderStyle="single"
-          padding={1}
-          flexDirection="column"
-          marginTop={1}
-          height={visibleHeight + 4}
-          overflow="hidden"
+          style={{
+            border: true,
+            borderStyle: "single",
+            padding: 1,
+            flexDirection: "column",
+            marginTop: 1,
+            height: visibleHeight + 4,
+            overflow: "hidden",
+          }}
         >
           {isLoading ? (
             <text>
@@ -96,8 +95,7 @@ export function FilePreview({ filePath }: FilePreviewProps) {
           ) : (
             <scrollbox
               focused
-              height={visibleHeight}
-              width="100%"
+              style={{ height: visibleHeight, width: "100%" }}
               scrollX={false}
             >
               <markdown content={content} syntaxStyle={markdownSyntaxStyle} />
@@ -105,7 +103,7 @@ export function FilePreview({ filePath }: FilePreviewProps) {
           )}
         </box>
 
-        <box marginTop={1}>
+        <box style={{ marginTop: 1 }}>
           <text>
             <span fg="gray">[↑↓/PgUp/PgDn] Scroll [Esc] Back</span>
           </text>

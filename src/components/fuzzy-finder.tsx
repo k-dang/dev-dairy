@@ -77,13 +77,10 @@ export function FuzzyFinder({ onSelect, onCancel }: FuzzyFinderProps) {
   });
 
   return (
-    <box flexDirection="column" padding={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
       <box
-        border
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
         title="Dev Diary Directory Picker"
-        padding={1}
-        flexDirection="column"
-        gap={1}
       >
         {isLoading ? (
           <text>
@@ -91,15 +88,15 @@ export function FuzzyFinder({ onSelect, onCancel }: FuzzyFinderProps) {
           </text>
         ) : (
           <>
-            <box flexDirection="row" gap={1}>
+            <box style={{ flexDirection: "row", gap: 1 }}>
               <text>Filter:</text>
-              <box border backgroundColor="#1a1a2e" width={40}>
+              <box style={{ border: true, backgroundColor: "#1a1a2e", width: 40 }}>
                 <text>{query || " "}</text>
               </box>
             </box>
 
-            <scrollbox height={maxVisible} focused>
-              <box flexDirection="column">
+            <scrollbox style={{ height: maxVisible }} focused>
+              <box style={{ flexDirection: "column" }}>
                 {filteredDirs.length === 0 ? (
                   <text>
                     <span fg="gray">No matching directories</span>

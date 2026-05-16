@@ -22,13 +22,10 @@ export function SuccessView({ outputFiles, onPreview }: SuccessViewProps) {
   });
 
   return (
-    <box flexDirection="column" padding={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
       <box
-        border
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
         title="Dev Diary Complete"
-        padding={1}
-        flexDirection="column"
-        gap={1}
       >
         <text>
           <span fg="green">✓</span>
@@ -49,7 +46,7 @@ export function SuccessView({ outputFiles, onPreview }: SuccessViewProps) {
           </span>
         </text>
 
-        <box flexDirection="column" marginTop={1}>
+        <box style={{ flexDirection: "column", marginTop: 1 }}>
           <text>
             <span fg="gray">[↑/↓] Select [Enter/P] Preview [Esc] Back</span>
           </text>

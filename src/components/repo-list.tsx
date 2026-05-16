@@ -14,16 +14,13 @@ export function RepoList({ repos, onConfirm }: RepoListProps) {
   });
 
   return (
-    <box flexDirection="column" padding={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
       <box
-        border
+        style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }}
         title={`Dev Diary Repositories (${repos.length})`}
-        padding={1}
-        flexDirection="column"
-        gap={1}
       >
-        <scrollbox height={15} focused>
-          <box flexDirection="column">
+        <scrollbox style={{ height: 15 }} focused>
+          <box style={{ flexDirection: "column" }}>
             {repos.map((repo, index) => (
               <text key={`${repo.name}-${index}`}>
                 <span fg="green">• </span>

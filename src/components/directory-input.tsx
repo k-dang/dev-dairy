@@ -99,8 +99,8 @@ export function DirectoryInput({
   }
 
   return (
-    <box flexDirection="column" padding={1}>
-      <box border title="Dev Diary" padding={1} flexDirection="column" gap={1}>
+    <box style={{ flexDirection: "column", padding: 1 }}>
+      <box style={{ border: true, padding: 1, flexDirection: "column", gap: 1 }} title="Dev Diary">
         <text>
           <span fg="cyan">
             Scan Git repositories and generate BRAG and dev log entries
@@ -108,11 +108,13 @@ export function DirectoryInput({
         </text>
 
         <box
-          border
-          borderStyle="rounded"
-          padding={1}
-          height={5}
-          backgroundColor={focused === "directory" ? FIELD_FOCUS_BG : undefined}
+          style={{
+            border: true,
+            borderStyle: "rounded",
+            padding: 1,
+            height: 5,
+            backgroundColor: focused === "directory" ? FIELD_FOCUS_BG : undefined,
+          }}
           title="Scan directory (Ctrl+F)"
         >
           <input
@@ -125,11 +127,13 @@ export function DirectoryInput({
         </box>
 
         <box
-          border
-          borderStyle="rounded"
-          padding={1}
-          height={5}
-          backgroundColor={focused === "output" ? FIELD_FOCUS_BG : undefined}
+          style={{
+            border: true,
+            borderStyle: "rounded",
+            padding: 1,
+            height: 5,
+            backgroundColor: focused === "output" ? FIELD_FOCUS_BG : undefined,
+          }}
           title="Output path (Ctrl+F)"
         >
           <input
@@ -142,10 +146,12 @@ export function DirectoryInput({
         </box>
 
         <box
-          border
-          borderStyle="rounded"
-          padding={1}
-          backgroundColor={focused === "days" ? FIELD_FOCUS_BG : undefined}
+          style={{
+            border: true,
+            borderStyle: "rounded",
+            padding: 1,
+            backgroundColor: focused === "days" ? FIELD_FOCUS_BG : undefined,
+          }}
           title="Days to include (←/→)"
         >
           <text>
